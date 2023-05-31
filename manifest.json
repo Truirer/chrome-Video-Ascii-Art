@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "Chrome Video Ascii Art Converter",
+    "description": "An extension to convert videos to ascii art",
+    "version": "0.0.1",
+    "options_page": "settings/settings.html",
+    "action": {
+        "default_title": "Chrome Video Ascii Art Converter",
+        "default_popup": "popup/popup.html"
+    },
+    "permissions": [],
+    "host_permissions": [
+        "*://*/*"
+    ],
+    "background": {
+        "service_worker": "service-worker.js"
+    },
+    "content_scripts": [{
+        "js": ["foreground.js"],
+        "matches": ["<all_urls>"]
+    }]
+}
