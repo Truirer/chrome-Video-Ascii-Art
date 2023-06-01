@@ -49,6 +49,7 @@ function startAsciiVideo(){
     preD.id="ascii"
     preD.style.lineHeight = ".55"
     preD.style.fontSize= "8px"
+    preD.style.zIndex="500000"
     let canvasD = document.createElement("canvas")
     canvasD.id ="preview"
     canvasD.style.top = offsets.top +"px"
