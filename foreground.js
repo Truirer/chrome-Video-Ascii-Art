@@ -2,24 +2,40 @@
     let count = true;
     chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
-            let windowVideo = document.querySelector("video");
-            if(windowVideo && count){
-                count = false;
-                windowVideo.pause()
-                startAsciiVideo()
-                windowVideo.play()
-            }
-            else if(windowVideo){
-                windowVideo.pause()
-                resizeAscii()
-                windowVideo.play()
+            sendResponse({status: 'ok'});
 
+            let windowVideo = document.querySelector("video");
+            if(request.data.startAscii){
+                if(windowVideo && count ){
+                    count = false;
+                    windowVideo.pause()
+                    startAsciiVideo()
+                    windowVideo.play()
+                }
+                else if(windowVideo){
+                    windowVideo.pause()
+                    resizeAscii()
+                    windowVideo.play()
+    
+                }
             }
+            if(request.data.invertAscii){
+                let preElement = document.querySelector("pre")
+                if(preElement){preElement.style.transform=request.data.invertAscii}
+                invert = request.data.invertAscii
+            }
+            if(request.data.resizeAscii){
+                ratio = request.data.resizeAscii
+            }
+            console.log(request, sender, sendResponse)
+
     });
 
 
 })();
 const multiplier = 4;
+let ratio = 0.5;
+let invert = ""
 function resizeAscii(){
     const canvas = document.getElementById('preview');
     const asciiImage = document.getElementById('ascii');
@@ -49,9 +65,8 @@ function startAsciiVideo(){
     preD.style.zIndex="5000000"
     preD.id="ascii"
     preD.style.lineHeight = ".55"
-    preD.style.fontSize= video.scrollWidth/video.scrollHeight*multiplier +"PX"
+    preD.style.fontSize= video.scrollWidth/video.scrollHeight*multiplier +"px"
     preD.style.fontSize= "8px"
-    preD.style.zIndex="500000"
     let canvasD = document.createElement("canvas")
     canvasD.id ="preview"
     canvasD.style.top = offsets.top +"px"
@@ -101,8 +116,9 @@ function startAsciiVideo(){
 
 
     function renderAscii (e){
-            const width = video.scrollWidth/multiplier
-            const height = video.scrollHeight/multiplier
+            const width = video.scrollWidth/multiplier*ratio
+            const height = video.scrollHeight/multiplier*ratio
+
             canvas.width=width;
             canvas.height=height;
             context.drawImage(e, 0, 0, width, height);
@@ -113,7 +129,7 @@ function startAsciiVideo(){
 
     // set canvas size = video size when known
     video.addEventListener('loadedmetadata', function() {
-    preD.style.fontSize= video.scrollWidth/video.scrollHeight*multiplier +"PX"
+    preD.style.fontSize= video.scrollWidth/video.scrollHeight*multiplier +"px"
 
     });
 
