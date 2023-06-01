@@ -19,7 +19,7 @@
 
 
 })();
-
+const multiplier = 4;
 function resizeAscii(){
     const canvas = document.getElementById('preview');
     const asciiImage = document.getElementById('ascii');
@@ -46,9 +46,12 @@ function startAsciiVideo(){
     preD.style.height = video.style.height 
     preD.style.position = "absolute"
     preD.style.background ="white"
+    preD.style.zIndex="5000000"
     preD.id="ascii"
     preD.style.lineHeight = ".55"
+    preD.style.fontSize= video.scrollWidth/video.scrollHeight*multiplier +"PX"
     preD.style.fontSize= "8px"
+    preD.style.zIndex="500000"
     let canvasD = document.createElement("canvas")
     canvasD.id ="preview"
     canvasD.style.top = offsets.top +"px"
@@ -75,7 +78,7 @@ function startAsciiVideo(){
 
 
     const convertToGrayScales = (context, width, height) => {
-        const imageData = context.getImageData(0, 0, width, height);
+        const imageData = context.getImageData(0, 0,width, height);
 
         const grayScales = [];
         let count = 0;
@@ -95,24 +98,23 @@ function startAsciiVideo(){
     };
 
 
-    let multiplier = 1.46;
 
 
     function renderAscii (e){
-            const width = Math.floor(video.scrollWidth/3/multiplier);
-            const horizontalWidth = video.videoHeight/video.videoWidth*width
-            const height = horizontalWidth ;
-
+            const width = video.scrollWidth/multiplier
+            const height = video.scrollHeight/multiplier
+            canvas.width=width;
+            canvas.height=height;
             context.drawImage(e, 0, 0, width, height);
             const grayScales = convertToGrayScales(context, width, height);
-            drawAscii(grayScales, width);
+            drawAscii(grayScales, Math.floor(width));
     };
 
 
     // set canvas size = video size when known
     video.addEventListener('loadedmetadata', function() {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight*2;
+    preD.style.fontSize= video.scrollWidth/video.scrollHeight*multiplier +"PX"
+
     });
 
     video.addEventListener('play', function() {
